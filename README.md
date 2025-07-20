@@ -3,7 +3,7 @@ When excessive force is applied to the end-effector or a service is received, th
 
 ## install 
 ```
-git clone https://github.com/RDC-harvesting-robot/leptrino_force_sensor_node.git
+git clone https://github.com/RDC-harvesting-robot/leptrino_force_sensor.git
 ```
 
 ## Execute
