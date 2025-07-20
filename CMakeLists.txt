@@ -10,6 +10,7 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 
 add_executable(force_emergency_stop src/force_emergency_stop.cpp)
