@@ -7,15 +7,14 @@ find_package(rclcpp_action REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
-find_package(rclcpp_action REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-
 
 add_executable(force_emergency_stop src/force_emergency_stop.cpp)
+add_executable(servo_stop src/servo_stop.cpp)
 
-ament_target_dependencies(force_emergency_stop
+ament_target_dependencies(
+  force_emergency_stop
   rclcpp
   rclcpp_action
   std_srvs
@@ -25,8 +24,15 @@ ament_target_dependencies(force_emergency_stop
   geometry_msgs
 )
 
+ament_target_dependencies(
+  servo_stop
+  rclcpp
+  geometry_msgs
+)
+
 install(TARGETS
   force_emergency_stop
+  servo_stop
   DESTINATION lib/${PROJECT_NAME}
 )
 
