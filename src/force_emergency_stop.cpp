@@ -4,6 +4,9 @@
 #include <geometry_msgs/msg/wrench_stamped.hpp>
 #include <std_srvs/srv/trigger.hpp>
 #include <cmath>
+# include <chrono>
+
+using namespace std::chrono_literals;
 
 class TrajectoryCancelNode : public rclcpp::Node
 {
@@ -14,6 +17,9 @@ public:
 
   TrajectoryCancelNode() : Node("trajectory_cancel_node")
   {
+
+    threshold_ = this->declare_parameter<double>("threshold", 3.0);
+
     client_ = rclcpp_action::create_client<FollowJointTrajectory>(
       this, "/scaled_joint_trajectory_controller/follow_joint_trajectory");
 
@@ -34,9 +40,13 @@ public:
 private:
   void try_cancel()
   {
-    if (std::abs(fx) >= 6.0 || std::abs(fy) >= 6.0 || std::abs(fz) >= 6.0) {
-      client_->async_cancel_all_goals();
-      RCLCPP_WARN(this->get_logger(), "Force threshold exceeded! Sent cancel request.");
+    if (std::abs(fx) >= threshold_ || std::abs(fy) >= threshold_ || std::abs(fz) >= threshold_) {
+      while(rclcpp::ok()){
+        client_->async_cancel_all_goals();
+        RCLCPP_WARN(this->get_logger(), "Force threshold exceeded! Sent cancel request.");
+        rclcpp::sleep_for(1000ms);
+      }
+
     }
 
     const double delta = 1e-3;
@@ -83,6 +93,8 @@ private:
   double fx = 0, fy = 0, fz = 0;
   double fx_buff = 0, fy_buff = 0, fz_buff = 0;
   int error_count = 0;
+
+  double threshold_{3.0};
 };
 
 int main(int argc, char **argv)
