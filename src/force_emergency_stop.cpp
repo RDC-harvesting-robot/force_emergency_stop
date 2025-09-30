@@ -18,7 +18,7 @@ public:
   TrajectoryCancelNode() : Node("trajectory_cancel_node")
   {
 
-    threshold_ = this->declare_parameter<double>("threshold", 3.0);
+    threshold_ = this->declare_parameter<double>("threshold", 5.5);
 
     client_ = rclcpp_action::create_client<FollowJointTrajectory>(
       this, "/scaled_joint_trajectory_controller/follow_joint_trajectory");
@@ -41,11 +41,7 @@ private:
   void try_cancel()
   {
     if (std::abs(fx) >= threshold_ || std::abs(fy) >= threshold_ || std::abs(fz) >= threshold_) {
-      while(rclcpp::ok()){
-        client_->async_cancel_all_goals();
-        RCLCPP_WARN(this->get_logger(), "Force threshold exceeded! Sent cancel request.");
-        rclcpp::sleep_for(1000ms);
-      }
+      cancel_action();
 
     }
 
@@ -79,10 +75,15 @@ private:
     std::shared_ptr<Trigger::Response> response)
   {
     (void)request;  // unused
-    client_->async_cancel_all_goals();
-    RCLCPP_INFO(this->get_logger(), "Service call received: canceled trajectory.");
-    response->success = true;
-    response->message = "Trajectory canceled via service.";
+    cancel_action();
+  }
+
+  void cancel_action(){
+    while(rclcpp::ok()){
+      client_->async_cancel_all_goals();
+      RCLCPP_WARN(this->get_logger(), "Force threshold exceeded! Sent cancel request.");
+      rclcpp::sleep_for(10ms);
+    }
   }
 
   rclcpp_action::Client<FollowJointTrajectory>::SharedPtr client_;

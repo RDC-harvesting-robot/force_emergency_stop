@@ -12,6 +12,7 @@ find_package(geometry_msgs REQUIRED)
 
 add_executable(force_emergency_stop src/force_emergency_stop.cpp)
 add_executable(servo_stop src/servo_stop.cpp)
+add_executable(key_action_cancel src/key_action_cancel.cpp)
 
 ament_target_dependencies(
   force_emergency_stop
@@ -29,6 +30,13 @@ ament_target_dependencies(
   rclcpp
   geometry_msgs
 )
+
+ament_target_dependencies(key_action_cancel
+  rclcpp rclcpp_action control_msgs)
+
+install(TARGETS key_action_cancel
+  DESTINATION lib/${PROJECT_NAME})
+
 
 install(TARGETS
   force_emergency_stop
