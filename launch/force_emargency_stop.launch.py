@@ -21,7 +21,15 @@ def generate_launch_description():
         output='screen'
     )
 
+    servo_stop_node = Node(
+        package='force_emergency_stop',
+        executable='servo_stop',
+        name='servo_stop_node',
+        output='screen'
+    )
+
     return LaunchDescription([
         leptrino_launch,
-        emergency_stop_node
+        emergency_stop_node,   # ← カンマが必要
+        servo_stop_node
     ])

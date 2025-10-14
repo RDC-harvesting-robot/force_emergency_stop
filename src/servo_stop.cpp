@@ -10,17 +10,17 @@ public:
     {
         // 力センサの購読
         force_sub_ = this->create_subscription<geometry_msgs::msg::WrenchStamped>(
-            "/calibrated_force_data", 10,
+            "/calibrated_force_data", 1,
             std::bind(&ServoStopNode::force_callback, this, std::placeholders::_1));
 
         // サーボ指令の購読
         servo_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
-            "/servo_node/delta_twist_cmds", 10,
+            "/servo_node/delta_twist_cmds", 1,
             std::bind(&ServoStopNode::servo_callback, this, std::placeholders::_1));
 
         // サーボ指令の発行
         servo_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>(
-            "/servo_node/delta_twist_cmds_filtered", 10);
+            "/servo_node/delta_twist_cmds_filtered", 1);
 
         RCLCPP_INFO(this->get_logger(), "ServoStopNode started.");
     }
@@ -58,6 +58,12 @@ private:
             cmd.twist.angular.y = 0.0;
             cmd.twist.angular.z = 0.0;
         }
+        cmd.twist.linear.x =  cmd.twist.linear.x*-1;
+        cmd.twist.linear.y = cmd.twist.linear.y*-1;
+        cmd.twist.linear.z = cmd.twist.linear.z*-1;
+        cmd.twist.angular.x = cmd.twist.angular.x*-1;
+        cmd.twist.angular.y = cmd.twist.angular.y*-1;
+        cmd.twist.angular.z = cmd.twist.angular.z*-1;
 
         servo_pub_->publish(cmd);
     }
