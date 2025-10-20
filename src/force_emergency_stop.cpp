@@ -23,7 +23,7 @@ public:
 
     client_ = rclcpp_action::create_client<FollowJointTrajectory>(
       // 先頭に/left|right_arm/を追加すればOK
-      this, "/scaled_joint_trajectory_controller/follow_joint_trajectory");
+      this, "scaled_joint_trajectory_controller/follow_joint_trajectory");
 
     force_sub_ = this->create_subscription<geometry_msgs::msg::WrenchStamped>(
       //先頭に/left|rightを追加すればOK

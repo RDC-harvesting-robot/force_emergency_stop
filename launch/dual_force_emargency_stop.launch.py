@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # 左アーム用のノード
     left = GroupAction([
-        PushRosNamespace('left'),
+        PushRosNamespace('left_arm'),
         Node(
             package='force_emergency_stop', 
             executable='force_emergency_stop',  
@@ -23,7 +23,7 @@ def generate_launch_description():
             parameters=[{'threshold': LaunchConfiguration('threshold')}],
             remappings=[#ここで名前空間を書き換えることで左右を切り分ける
                 ('/scaled_joint_trajectory_controller/follow_joint_trajectory',
-                 '/left/scaled_joint_trajectory_controller/follow_joint_trajectory'),
+                 '/left_arm/scaled_joint_trajectory_controller/follow_joint_trajectory'),
                 ('/calibrated_force_data',
                  '/left/calibrated_force_data'),
                 ('/cancel_trajectory',
@@ -34,7 +34,7 @@ def generate_launch_description():
 
     # 右アーム用のノード
     right = GroupAction([
-        PushRosNamespace('right'),
+        PushRosNamespace('right_arm'),
         Node(
             package='force_emergency_stop',
             executable='force_emergency_stop',
@@ -43,7 +43,7 @@ def generate_launch_description():
             parameters=[{'threshold': LaunchConfiguration('threshold')}],
             remappings=[
                 ('/scaled_joint_trajectory_controller/follow_joint_trajectory',
-                 '/right/scaled_joint_trajectory_controller/follow_joint_trajectory'),
+                 '/right_arm/scaled_joint_trajectory_controller/follow_joint_trajectory'),
                 ('/calibrated_force_data',
                  '/right/calibrated_force_data'),
                 ('/cancel_trajectory',
@@ -56,4 +56,4 @@ def generate_launch_description():
         threshold_arg,
         left,
         right
-    ])
+    ])  
